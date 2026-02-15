@@ -1,0 +1,31 @@
+[gd_scene load_steps=5 format=3 uid="uid://c0yco7hpg0abq"]
+
+[ext_resource type="Script" uid="uid://102h7b0u8xoa" path="res://enemy_path.gd" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://y7i744wf3h02" path="res://enemy.tscn" id="2_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://bm7n7w3fs0bcm" path="res://tower.tscn" id="3_h2yge"]
+
+[sub_resource type="Curve2D" id="Curve2D_0xm2m"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 34, 497, 0, 0, 0, 0, 1876, 511)
+}
+point_count = 2
+
+[node name="Main" type="Node2D"]
+
+[node name="Background" type="ColorRect" parent="."]
+offset_right = 1920.0
+offset_bottom = 1080.0
+color = Color(0, 0, 0, 1)
+
+[node name="EnemyPath" type="Path2D" parent="."]
+curve = SubResource("Curve2D_0xm2m")
+script = ExtResource("1_ig7tw")
+
+[node name="PathVisual" type="Line2D" parent="EnemyPath"]
+
+[node name="Enemy" parent="EnemyPath" instance=ExtResource("2_0xm2m")]
+position = Vector2(34, 497)
+rotation = 0.0076002884
+
+[node name="Tower" parent="." instance=ExtResource("3_h2yge")]
+position = Vector2(400, 350)

@@ -1,0 +1,120 @@
+# Tower Defense Game - Project Context
+
+## Project Overview
+A tower defense game built with **Godot 4.5** (Forward Plus renderer) using GDScript.
+
+## Current Implementation Status
+
+### Core Components Implemented
+
+#### 1. Enemy System (enemy.gd, enemy.tscn)
+- **Location**: enemy.gd:1-20, enemy.tscn:1-22
+- Extends `PathFollow2D` to move along a predefined path
+- **Properties**:
+  - Speed: 100 pixels/second
+  - Health: 100 HP
+- **Features**:
+  - Automatic path following in `_process(delta)`
+  - `take_damage(amount)` method with health tracking
+  - `die()` method that frees the node when health <= 0
+- **Visual**: Red 32x32 ColorRect
+- **Collision**: Area2D with RectangleShape2D for tower detection
+
+#### 2. Tower System (tower.gd, tower.tscn)
+- **Location**: tower.gd:1-39, tower.tscn:1-22
+- Extends `Node2D` for static placement
+- **Properties**:
+  - Shoot cooldown: 1.0 seconds
+  - Range: 200 pixel radius (CircleShape2D)
+  - Preloaded projectile scene
+- **Features**:
+  - Detects enemies in range via Area2D overlap
+  - Auto-shoots at first enemy in range every 1 second
+  - `spawn_projectile(target)` creates projectiles at tower position
+- **Visual**: Green 48x48 ColorRect
+- **Range Detection**: Area2D with 200px radius CollisionShape2D
+
+#### 3. Projectile System (projectile.gd, projectile.tscn)
+- **Location**: projectile.gd:1-24
+- Extends `Node2D` for spawned bullets
+- **Properties**:
+  - Speed: 300 pixels/second
+  - Damage: 50 HP
+  - Target tracking
+- **Features**:
+  - Homes in on target using normalized direction vector
+  - Self-destructs if target becomes invalid
+  - Applies damage on collision (< 10px distance)
+  - Auto-cleanup via `queue_free()`
+
+#### 4. Path System (enemy_path.gd)
+- **Location**: enemy_path.gd:1-17
+- Extends `Path2D` for enemy movement routes
+- **Features**:
+  - Visual path rendering using Line2D
+  - Baked curve points for smooth path display
+  - White 5px width path visualization
+
+#### 5. Main Scene (main.tscn)
+- **Location**: main.tscn:1-32
+- **Resolution**: 1920x1080
+- **Components**:
+  - Black background (ColorRect)
+  - EnemyPath with simple horizontal path (x: 34→1876, y: ~500)
+  - One enemy instance starting at path beginning
+  - One tower instance at (400, 350)
+
+## Project Structure
+```
+tower-defense/
+├── .godot/              # Godot engine files
+├── enemy.gd             # Enemy logic
+├── enemy.tscn           # Enemy scene
+├── enemy_path.gd        # Path visual logic
+├── tower.gd             # Tower logic
+├── tower.tscn           # Tower scene
+├── projectile.gd        # Projectile logic
+├── projectile.tscn      # Projectile scene
+├── main.tscn            # Main game scene
+├── project.godot        # Godot project config
+├── icon.svg             # Project icon
+└── README.md            # Basic readme
+```
+
+## Game Mechanics Flow
+1. Enemy spawns at path start, moves along path at 100px/s
+2. Tower detects enemy when it enters 200px range
+3. Tower shoots projectile every 1 second while enemy in range
+4. Projectile homes to enemy at 300px/s
+5. On hit, enemy takes 50 damage
+6. Enemy dies after 2 hits (100 HP / 50 damage)
+
+## Known Limitations/TODOs
+- Only one enemy spawned at game start
+- No wave/spawn system
+- No resource/economy system
+- Tower placement is hardcoded (not player-controlled)
+- No UI (health bars, score, currency)
+- Path is simple straight line
+- No different enemy/tower types
+- No game over/win conditions
+- Projectiles have no visual representation (invisible)
+- No sound effects or music
+
+## Technical Notes
+- Uses Godot 4.5 syntax (type hints with `->`, `func _ready() -> void:`)
+- Scene instantiation via `preload()` and `instantiate()`
+- Signal connections via `.connect()` method
+- Node access via `$` syntax
+- Global scene tree access via `get_tree().root.add_child()`
+
+## Development Environment
+- Engine: Godot 4.5
+- Language: GDScript
+- Git repository initialized
+- License: Present (LICENSE file)
+
+## Important Rules
+- **NEVER add Claude or AI attribution to commit messages**
+- User prefers clean, professional commit messages without Co-Authored-By tags
+- Keep commit messages focused on the actual changes
